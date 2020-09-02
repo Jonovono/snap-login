@@ -3,34 +3,33 @@ import { NativeModules, NativeEventEmitter } from 'react-native';
 export const RNSnapchatLogin = NativeModules.SnapchatLogin;
 export const RNSnapchatLoginEmitter = new NativeEventEmitter(RNSnapchatLogin);
 
-export default class SnapchatLogin {
-  static login() {
+class SnapchatLogin {
+  login = () => {
     return new Promise((resolve, reject) => {
       RNSnapchatLogin.login()
         .then((result) => {
-          if(result.error) {
+          if (result.error) {
             reject(result.error);
-          } else { 
-            this.getUserInfo()
-              .then(resolve)
-              .catch(reject);
+          } else {
+            console.log('THISS??', this);
+            this.getUserInfo().then(resolve).catch(reject);
           }
         })
-        .catch(e => reject(e)); 
+        .catch((e) => reject(e));
     });
-  }
+  };
 
-  static async isLogged() {
+  isLogged = async () => {
     const { result } = await RNSnapchatLogin.isUserLoggedIn();
     return result;
-  }
+  };
 
-  static async logout() {
+  logout = async () => {
     const { result } = await RNSnapchatLogin.logout();
     return result;
-  }
+  };
 
-  static getUserInfo() {
+  getUserInfo = () => {
     return new Promise((resolve, reject) => {
       RNSnapchatLogin.fetchUserData()
         .then(async (tmp) => {
@@ -43,7 +42,11 @@ export default class SnapchatLogin {
             resolve(data);
           }
         })
-        .catch(e => { reject(e) });
+        .catch((e) => {
+          reject(e);
+        });
     });
-  }
+  };
 }
+
+export default new SnapchatLogin();
